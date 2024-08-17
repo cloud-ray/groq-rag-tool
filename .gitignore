@@ -1,0 +1,5 @@
+.idx
+.venv
+.env
+assets/
+extracted_contents/
