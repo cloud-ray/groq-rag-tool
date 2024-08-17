@@ -129,4 +129,4 @@ This project utilizes the following resources:
 * [Langfuse](https://langfuse.com/docs) for tracing and monitoring.
 
 ## Contact
-For any questions or comments, please contact [Ray](mailto:ray@cybersavvy.one).
+For any questions or comments, please contact [Ray](https://www.linkedin.com/in/raymond-fuorry).
