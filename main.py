@@ -2,18 +2,25 @@
 import os
 from langfuse.decorators import observe, langfuse_context
 
-os.environ['LANGFUSE_SECRET_KEY'] = 'sk-lf-112de8e9-b2f8-4484-a607-4058999af1b4'
-os.environ['LANGFUSE_PUBLIC_KEY'] = 'pk-lf-253d1fbb-858a-4121-948b-28d29dbf4f58'
-os.environ['LANGFUSE_HOST'] = 'https://cloud.langfuse.com'
+import os
+from dotenv import load_dotenv
 
+# Load environment variables from a .env file
+load_dotenv()
 
-from groq import Groq
+# Environment variables
+PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
+PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
+PINECONE_SPEC_CLOUD = os.getenv('PINECONE_SPEC_CLOUD')
+PINECONE_SPEC_REGION = os.getenv('PINECONE_SPEC_REGION')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
-llm = Groq(
-    api_key='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',
-)
-
-
+# Initialize Pinecone client, SentenceTransformer model, and Groq client
+print("Initializing Pinecone client, model, and Groq client...")
+pc = Pinecone(api_key=PINECONE_API_KEY)
+model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+client = Groq(api_key=GROQ_API_KEY)
+MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
 
 
