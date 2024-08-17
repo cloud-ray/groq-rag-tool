@@ -1,3 +1,5 @@
+# prompt_tester.py
+
 import os
 import json
 from dotenv import load_dotenv
@@ -18,9 +20,9 @@ GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 # Initialize Pinecone client, SentenceTransformer model, and Groq client
 print("Initializing Pinecone client, model, and Groq client...")
 pc = Pinecone(api_key=PINECONE_API_KEY)
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+embed_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 client = Groq(api_key=GROQ_API_KEY)
-MODEL = 'llama3-groq-70b-8192-tool-use-preview'
+tool_model = 'llama3-groq-70b-8192-tool-use-preview'
 
 # Connect to or create the Pinecone index
 print("Connecting to Pinecone index...")
@@ -43,7 +45,7 @@ def query_pinecone(query_text, top_k=3):
         print(f"Querying Pinecone with text: '{query_text}' and top_k: {top_k}...")
         
         # Encode the query text into an embedding
-        query_embedding = model.encode(query_text).tolist()
+        query_embedding = embed_model.encode(query_text).tolist()
 
         # Query the Pinecone index to find the top_k most similar vectors
         results = index.query(
@@ -86,7 +88,7 @@ def run_conversation(user_prompt):
     messages = [
         {
             "role": "system",
-            "content": "You are a Roboflow knowledge base assistant that retrieves information from a Pinecone vector database."
+            "content": "You are a knowledge base assistant that retrieves information from a Pinecone vector database."
         },
         {
             "role": "user",
@@ -127,7 +129,7 @@ def run_conversation(user_prompt):
 
     # Generate the first response using Groq
     response = client.chat.completions.create(
-        model=MODEL,
+        model=tool_model,
         messages=messages,
         tools=tools,
         tool_choice="auto",
@@ -207,7 +209,7 @@ def run_conversation(user_prompt):
 
         # Customize the system message for the second response
         updated_system_prompt = (
-            "You are an assistant for question-answering tasks. Use the following Documents of retrieved knowledge base Context to answer the question. "
+            "You are an assistant for question-answering tasks. Use the following retrieved content from the knowledge base to answer the question. "
             "Be as detailed and explicit as possible, but within the realm of the knowledge you have access to. "
             "If applicable, return the most relevant URL(s) for the answer in this format: "
             "To learn more, visit: <url>"
@@ -223,7 +225,7 @@ def run_conversation(user_prompt):
 
         # Create the second response
         second_response = client.chat.completions.create(
-            model=MODEL,
+            model=tool_model,
             messages=messages
         )
 
