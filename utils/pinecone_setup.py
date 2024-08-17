@@ -1,8 +1,6 @@
 import os
 from pinecone import Pinecone, ServerlessSpec
 from sentence_transformers import SentenceTransformer
-
-import os
 from dotenv import load_dotenv
 
 # Load environment variables from a .env file
@@ -13,20 +11,16 @@ PINECONE_API_KEY = os.getenv('PINECONE_API_KEY')
 PINECONE_INDEX_NAME = os.getenv('PINECONE_INDEX_NAME')
 PINECONE_SPEC_CLOUD = os.getenv('PINECONE_SPEC_CLOUD')
 PINECONE_SPEC_REGION = os.getenv('PINECONE_SPEC_REGION')
-GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 
-# Initialize Pinecone client, SentenceTransformer model, and Groq client
-print("Initializing Pinecone client, model, and Groq client...")
+# Initialize Pinecone client, SentenceTransformer model
 pc = Pinecone(api_key=PINECONE_API_KEY)
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-client = Groq(api_key=GROQ_API_KEY)
-MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
 # Create or connect to a Pinecone index
-index_name = "robo-rag"
+index_name = PINECONE_INDEX_NAME
 dimension = 384
 metric = "cosine"
-spec = ServerlessSpec(cloud="aws", region="us-east-1")
+spec = ServerlessSpec(cloud=PINECONE_SPEC_CLOUD, region=PINECONE_SPEC_REGION)
 
 # Ensure the index exists
 if index_name not in pc.list_indexes().names():

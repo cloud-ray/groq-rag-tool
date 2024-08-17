@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer
 import json
 from groq import Groq
 from dotenv import load_dotenv
+from langfuse.decorators import observe, langfuse_context
 
 load_dotenv()
 
